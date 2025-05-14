@@ -1,0 +1,31 @@
+-- FABRICANTES
+
+USE ACTIVIDAD;
+
+DROP PROCEDURE IF EXISTS FABRICANTE_i;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE FABRICANTE_i(
+    IN nombre VARCHAR(100)
+)
+BEGIN
+    INSERT INTO FABRICANTE(nombre)
+    VALUES(nombre);
+END$$
+DELIMITER ;
+
+-- PRODUCTOS
+
+USE ACTIVIDAD;
+
+DROP PROCEDURE IF EXISTS PRODUCTO_i;
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE PRODUCTO_i(
+    IN nombre VARCHAR(100),
+    IN precio DOUBLE,
+    IN codigo_fabr INT(10)
+)
+BEGIN
+    INSERT INTO PRODUCTO(nombre, precio, codigo_fabr)
+    VALUES(nombre, precio, codigo_fabr);
+END$$
+DELIMITER ;

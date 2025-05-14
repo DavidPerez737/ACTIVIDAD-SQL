@@ -1,0 +1,11 @@
+CALL FABRICANTE_i("Asus");
+CALL FABRICANTE_i("Lenovo");
+CALL FABRICANTE_i("Hewlett-Packard");
+CALL FABRICANTE_i("Samsung");
+CALL FABRICANTE_i("Seagate");
+CALL FABRICANTE_i("Crucial");
+CALL FABRICANTE_i("Gigabyte");
+CALL FABRICANTE_i("Huawei");
+CALL FABRICANTE_i("Xiaomi");
+
+SELECT * FROM FABRICANTE;
