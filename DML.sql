@@ -121,6 +121,71 @@ SELECT f.nombre
 FROM FABRICANTE AS f
 LEFT JOIN PRODUCTO AS p ON p.codigo_fabr = f.codigo
 WHERE p.codigo_fabr IS NULL;
+-- 3 EN WORD
+
+-- CONSULTAS RESUMEN
+
+-- 1
+SELECT COUNT(*) FROM PRODUCTO;
+-- 2
+SELECT COUNT(*) FROM FABRICANTE;
+-- 3
+SELECT COUNT(DISTINCT codigo_fabr) FROM PRODUCTO;
+-- 4
+SELECT TRUNCATE(AVG(precio), 1) FROM PRODUCTO;
+-- 5
+SELECT MIN(precio) FROM PRODUCTO;
+-- 6
+SELECT MAX(precio) FROM PRODUCTO;
+-- 7
+SELECT precio, nombre  FROM PRODUCTO 
+WHERE precio = (SELECT MIN(precio) FROM PRODUCTO);
+-- 8
+SELECT precio, nombre FROM PRODUCTO
+WHERE precio = (SELECT MAX(precio) FROM PRODUCTO);
+-- 9
+SELECT SUM(precio) FROM PRODUCTO;
+-- 10
+SELECT COUNT(*) FROM PRODUCTO
+WHERE codigo_fabr = 1;
+-- 11
+SELECT TRUNCATE(AVG(precio), 1) FROM PRODUCTO
+WHERE codigo_fabr = 1;
+-- 12
+SELECT MIN(precio) FROM PRODUCTO
+WHERE codigo_fabr = 1;
+-- 13
+SELECT MAX(precio) FROM PRODUCTO
+WHERE codigo_fabr = 1;
+-- 14
+SELECT SUM(precio) FROM PRODUCTO
+WHERE codigo_fabr = 1;
+-- 15
+SELECT MAX(precio), MIN(precio), AVG(precio), COUNT(*) 
+FROM PRODUCTO WHERE codigo_fabr = 6;
+-- 16
+SELECT f.nombre, COUNT(p.codigo) AS cantidad_productos 
+FROM PRODUCTO AS p RIGHT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+GROUP BY f.nombre ORDER BY cantidad_productos DESC;
+-- 17
+SELECT f.nombre, MAX(p.precio), MIN(p.precio), AVG(p.precio)
+FROM PRODUCTO AS p RIGHT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+GROUP BY f.nombre;
+-- 18
+SELECT f.codigo, MAX(p.precio), MIN(p.precio), AVG(p.precio) as precio_medio, COUNT(*) as total_productos
+FROM PRODUCTO as p RIGHT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+GROUP BY f.nombre HAVING precio_medio > 200;
+-- 19
+SELECT f.nombre, MAX(p.precio), MIN(p.precio), AVG(p.precio) as precio_medio, COUNT(*) as total_productos
+FROM PRODUCTO as p RIGHT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+GROUP BY f.nombre HAVING precio_medio > 200;
+-- 20
+SELECT COUNT(*) as numero_productos 
+FROM PRODUCTO WHERE precio >= 180;
+-- 21
+SELECT f.nombre, COUNT(*) as numero_productos FROM PRODUCTO as p
+JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE p.precio >= 180 GROUP BY f.nombre;
 
 
 
