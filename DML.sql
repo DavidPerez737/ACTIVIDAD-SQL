@@ -21,6 +21,7 @@ CALL PRODUCTO_i("Impresora HP Deskjet 3720", 59.99, 3);
 CALL PRODUCTO_i("Impresora HP Laserjet Pro M26nw", 180, 3);
 
 -- CONSULTA TABLAS
+
 SELECT nombre FROM PRODUCTO; -- 1
 SELECT nombre, precio FROM PRODUCTO; -- 2
 SELECT * FROM PRODUCTO; -- 3
@@ -40,5 +41,93 @@ SELECT * FROM FABRICANTE LIMIT 5; -- 16
 SELECT * FROM FABRICANTE LIMIT 3,2; -- 17
 SELECT nombre, precio FROM PRODUCTO ORDER BY precio ASC LIMIT 1; -- 18
 SELECT nombre, precio FROM PRODUCTO ORDER BY precio DESC LIMIT 1; -- 19
+SELECT nombre FROM PRODUCTO WHERE codigo_fabr = 2; -- 20
+SELECT nombre FROM PRODUCTO WHERE precio <= 120; -- 21
+SELECT nombre FROM PRODUCTO WHERE precio >= 400; -- 22
+SELECT nombre FROM PRODUCTO WHERE precio < 400; -- 23
+SELECT * FROM PRODUCTO WHERE precio > 80 AND precio < 300; -- 24
+SELECT * FROM PRODUCTO WHERE precio BETWEEN 60 AND 200; -- 25
+SELECT * FROM PRODUCTO WHERE precio > 200 AND codigo_fabr = 6; -- 26
+SELECT * FROM PRODUCTO WHERE codigo_fabr = 1 OR codigo_fabr = 3 OR codigo_fabr = 5; -- 27
+SELECT * FROM PRODUCTO WHERE codigo_fabr IN (1, 3, 5); -- 28
+SELECT nombre, precio * 100 AS centimos FROM PRODUCTO; -- 29
+SELECT nombre FROM FABRICANTE WHERE nombre LIKE "S%"; -- 30
+SELECT nombre FROM FABRICANTE WHERE nombre LIKE "%e"; -- 31
+SELECT nombre FROM FABRICANTE WHERE nombre LIKE "%w%"; -- 32
+SELECT nombre FROM FABRICANTE WHERE LENGTH(nombre) = 4; -- 33
+SELECT nombre FROM PRODUCTO WHERE nombre LIKE "%Portatil%"; -- 34
+SELECT nombre FROM PRODUCTO WHERE nombre LIKE "%monitor%" AND precio < 215; -- 35
+SELECT nombre, precio FROM PRODUCTO WHERE precio >= 180 ORDER BY precio DESC, nombre ASC; -- 36
+
+-- CONSULTA MULTITABLA INTERNA
+
+-- 1
+SELECT p.nombre, p.precio, f.nombre as nombre_fabricante 
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo;
+-- 2
+SELECT p.nombre, p.precio, f.nombre as nombre_fabricante 
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo 
+ORDER BY f.nombre ASC;
+-- 3
+SELECT p.codigo as codigo_producto, p.nombre, f.codigo as codigo_fabricante, f.nombre
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo;
+-- 4
+SELECT p.nombre, p.precio, f.nombre as nombre_fabricante
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+ORDER BY p.precio ASC LIMIT 1;
+-- 5
+SELECT p.nombre, p.precio, f.nombre as nombre_fabricante
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+ORDER BY p.precio DESC LIMIT 1;
+-- 6
+SELECT p.* 
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE f.codigo = 2;
+-- 7
+SELECT p.*
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE f.codigo = 6 AND precio > 200;
+-- 8
+SELECT p.*
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE f.codigo = 1 OR f.codigo = 3 OR f.codigo = 5;
+-- 9
+SELECT p.*
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE f.codigo IN (1, 3, 5);
+-- 10
+SELECT p.nombre, p.precio
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE f.nombre LIKE "%e";
+-- 11
+SELECT p.nombre, p.precio
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE f.nombre LIKE "%w%";
+-- 12
+SELECT p.nombre, p.precio, f.nombre 
+FROM PRODUCTO as p JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE p.precio >= 180 ORDER BY p.precio DESC, p.nombre ASC;
+-- 13 
+SELECT DISTINCT f.codigo, f.nombre
+FROM PRODUCTO as p LEFT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
