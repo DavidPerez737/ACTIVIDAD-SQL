@@ -111,6 +111,16 @@ WHERE p.precio >= 180 ORDER BY p.precio DESC, p.nombre ASC;
 SELECT DISTINCT f.codigo, f.nombre
 FROM PRODUCTO as p LEFT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo;
 
+-- CONSULTA MULTITABLA EXTERNA
+
+-- 1
+SELECT f.*, p.*
+FROM PRODUCTO as p RIGHT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo;
+-- 2
+SELECT f.nombre
+FROM FABRICANTE AS f
+LEFT JOIN PRODUCTO AS p ON p.codigo_fabr = f.codigo
+WHERE p.codigo_fabr IS NULL;
 
 
 
