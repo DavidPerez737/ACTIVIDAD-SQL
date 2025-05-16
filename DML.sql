@@ -21,13 +21,17 @@ CALL PRODUCTO_i("Impresora HP Deskjet 3720", 59.99, 3);
 CALL PRODUCTO_i("Impresora HP Laserjet Pro M26nw", 180, 3);
 
 -- CONSULTA TABLAS
-SELECT nombre FROM PRODUCTO;
-SELECT nombre, precio FROM PRODUCTO;
-SELECT * FROM PRODUCTO;
-SELECT nombre AS `nombre de producto`, precio AS euros, ROUND(precio * 1.12, 2) AS dólares FROM PRODUCTO;
-SELECT UPPER(nombre) AS nombre, precio FROM PRODUCTO;
-SELECT LOWER(nombre) AS nombre, precio FROM PRODUCTO;
-SELECT nombre, UPPER(LEFT(nombre, 2)) AS `DOS CARACTERES` FROM FABRICANTE;
-SELECT nombre, ROUND(precio) AS precio FROM PRODUCTO;
-SELECT nombre, TRUNCATE(precio, 0) AS precio FROM PRODUCTO;
-SELECT codigo_fabr FROM PRODUCTO;
+SELECT nombre FROM PRODUCTO; -- 1
+SELECT nombre, precio FROM PRODUCTO; -- 2
+SELECT * FROM PRODUCTO; -- 3
+SELECT nombre, precio, ROUND(precio * 1.12, 2) FROM PRODUCTO; -- 4
+SELECT nombre AS "nombre de producto", precio AS euros, ROUND(precio * 1.12, 2) AS dolares FROM PRODUCTO; -- 5
+SELECT UPPER(nombre) AS nombre, precio FROM PRODUCTO; -- 6
+SELECT LOWER(nombre) AS nombre, precio FROM PRODUCTO; -- 7
+SELECT nombre, UPPER(LEFT(nombre, 2)) AS "DOS CARACTERES" FROM FABRICANTE; -- 8
+SELECT nombre, ROUND(precio) AS precio FROM PRODUCTO; -- 9
+SELECT nombre, TRUNCATE(precio, 0) AS precio FROM PRODUCTO; -- 10
+SELECT codigo_fabr FROM PRODUCTO; -- 11
+SELECT DISTINCT codigo_fabr FROM PRODUCTO; -- 12
+SELECT nombre FROM FABRICANTE ORDER BY nombre ASC; -- 13
+
