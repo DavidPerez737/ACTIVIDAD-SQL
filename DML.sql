@@ -5,7 +5,7 @@ CALL FABRICANTE_i("Samsung");
 CALL FABRICANTE_i("Seagate");
 CALL FABRICANTE_i("Crucial");
 CALL FABRICANTE_i("Gigabyte");
-CALL FABRICANTE_i("Huawei"); -- perguntar si aca es con la apostrofe por lo que no tienen productos
+CALL FABRICANTE_i("Huawei");
 CALL FABRICANTE_i("Xiaomi");
 
 CALL PRODUCTO_i("Disco duro SATA3 1TB", 86.99, 5);
@@ -174,35 +174,119 @@ GROUP BY f.nombre;
 -- 18
 SELECT f.codigo, MAX(p.precio), MIN(p.precio), AVG(p.precio) as precio_medio, COUNT(*) as total_productos
 FROM PRODUCTO as p RIGHT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
-GROUP BY f.nombre HAVING precio_medio > 200;
+GROUP BY f.nombre HAVING precio_medio *0.90 > 200;
 -- 19
 SELECT f.nombre, MAX(p.precio), MIN(p.precio), AVG(p.precio) as precio_medio, COUNT(*) as total_productos
 FROM PRODUCTO as p RIGHT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
-GROUP BY f.nombre HAVING precio_medio > 200;
+GROUP BY f.nombre HAVING precio_medio *0.90 > 200;
 -- 20
 SELECT COUNT(*) as numero_productos 
-FROM PRODUCTO WHERE precio >= 180;
+FROM PRODUCTO WHERE precio *0.90 >= 180; 
 -- 21
-SELECT f.nombre, COUNT(*) as numero_productos FROM PRODUCTO as p
+SELECT f.nombre, COUNT(*) FROM PRODUCTO as p
 JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
-WHERE p.precio >= 180 GROUP BY f.nombre;
+WHERE p.precio *0.90 >= 180 GROUP BY f.nombre;
+-- 22
+SELECT f.codigo, AVG(p.precio) FROM PRODUCTO as p
+RIGHT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+GROUP BY f.codigo;
+-- 23
+SELECT f.nombre, AVG(p.precio) FROM PRODUCTO as p
+RIGHT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+GROUP BY f.nombre;
+-- 24
+SELECT f.nombre FROM PRODUCTO as p
+JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+GROUP BY f.nombre HAVING AVG(p.precio *0.90) >= 150;
+-- 25
+SELECT f.nombre FROM PRODUCTO as p
+JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+GROUP BY f.nombre HAVING COUNT(*) >= 2;
+-- 26
+SELECT f.nombre, COUNT(*) as total FROM PRODUCTO as p
+JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE p.precio *0.90 >= 220 GROUP BY f.nombre ORDER BY total DESC;
+-- 27
+SELECT f.nombre, COUNT(CASE WHEN p.precio *0.90 >= 220 THEN 1 ELSE NULL END) as total FROM PRODUCTO as p
+RIGHT JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+GROUP BY f.nombre ORDER BY total DESC;
+-- 28
+SELECT f.nombre FROM PRODUCTO as p
+JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+GROUP BY f.nombre HAVING SUM(p.precio *0.90) > 1000;
+-- 29
+SELECT p.nombre, p.precio, f.nombre FROM PRODUCTO p
+JOIN FABRICANTE f ON p.codigo_fabr = f.codigo
+WHERE p.precio = (SELECT MAX(p2.precio) FROM PRODUCTO as p2 WHERE p2.codigo_fabr = p.codigo_fabr) 
+ORDER BY f.nombre ASC;
 
+-- SUBCONSULTAS WHERE
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- 1
+SELECT * FROM PRODUCTO as p
+WHERE p.codigo_fabr = (SELECT f.codigo FROM FABRICANTE as f WHERE f.codigo = 2);
+-- 2
+SELECT * FROM PRODUCTO as p
+WHERE p.precio = (SELECT MAX(p2.precio) FROM PRODUCTO as p2 
+WHERE p2.codigo_fabr = (SELECT f.codigo FROM FABRICANTE as f WHERE f.nombre = 'Lenovo'));
+-- 3
+SELECT p.nombre FROM PRODUCTO as p
+WHERE p.precio = (SELECT MAX(p2.precio) FROM PRODUCTO as p2
+WHERE p2.codigo_fabr = (SELECT f.codigo FROM FABRICANTE as f WHERE f.nombre = 'Lenovo'));
+-- 4
+SELECT p.nombre FROM PRODUCTO as p
+WHERE p.precio = (SELECT MIN(p2.precio) FROM PRODUCTO as p2
+WHERE p2.codigo_fabr = (SELECT f.codigo FROM FABRICANTE as f WHERE f.nombre = 'Hewlett-Packard'));
+-- 5
+SELECT * FROM PRODUCTO as p
+WHERE p.precio >= (SELECT MAX(p2.precio) FROM PRODUCTO as p2
+WHERE p2.codigo_fabr = (SELECT f.codigo FROM FABRICANTE as f WHERE f.nombre = 'Lenovo'));
+-- 6
+SELECT p.* FROM PRODUCTO as p
+JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE f.nombre = 'Asus' AND p.precio > (SELECT AVG(p2.precio) FROM PRODUCTO as p2
+JOIN FABRICANTE as f2 ON p2.codigo_fabr = f2.codigo WHERE f2.nombre = 'Asus');
+-- 7
+SELECT * FROM PRODUCTO as p
+WHERE p.precio >= ALL (SELECT p2.precio FROM PRODUCTO as p2);
+-- 8
+SELECT * FROM PRODUCTO as p
+WHERE p.precio <= ALL (SELECT p2.precio FROM PRODUCTO as p2);
+-- 9
+SELECT f.nombre FROM FABRICANTE as f
+WHERE f.codigo = ANY (SELECT DISTINCT p.codigo_fabr FROM PRODUCTO as p);
+-- 10
+SELECT f.nombre FROM FABRICANTE as f
+WHERE f.codigo <> ALL (SELECT DISTINCT p.codigo_fabr FROM PRODUCTO as p);
+-- 11
+SELECT f.nombre FROM FABRICANTE as f
+WHERE f.codigo IN (SELECT DISTINCT p.codigo_fabr FROM PRODUCTO as p);
+-- 12
+SELECT f.nombre FROM FABRICANTE as f
+WHERE f.codigo NOT IN (SELECT DISTINCT p.codigo_fabr FROM PRODUCTO as p);
+-- 13
+SELECT f.nombre FROM FABRICANTE as f
+WHERE EXISTS (SELECT 1 FROM PRODUCTO as p WHERE p.codigo_fabr = f.codigo);
+-- 14
+SELECT f.nombre FROM FABRICANTE as f
+WHERE NOT EXISTS (SELECT 1 FROM PRODUCTO as p WHERE p.codigo_fabr = f.codigo);
+-- 15
+SELECT f.nombre, p.nombre, p.precio FROM PRODUCTO as p
+JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE p.precio = (SELECT MAX(p2.precio) FROM PRODUCTO as p2
+WHERE p2.codigo_fabr = f.codigo);
+-- 16
+SELECT * FROM PRODUCTO as p
+WHERE p.precio >= (SELECT AVG(p2.precio) FROM PRODUCTO as p2 
+WHERE p2.codigo_fabr = p.codigo_fabr);
+-- 17
+SELECT p.nombre FROM PRODUCTO as p
+JOIN FABRICANTE as f ON p.codigo_fabr = f.codigo
+WHERE f.nombre = 'Lenovo' AND p.precio = (SELECT MAX(p2.precio) FROM PRODUCTO as p2
+WHERE p2.codigo_fabr = f.codigo);
+-- 18 
+SELECT f.nombre FROM FABRICANTE as f
+JOIN PRODUCTO as p ON p.codigo_fabr = f.codigo
+GROUP BY f.nombre HAVING COUNT(*) = (SELECT COUNT(*) FROM PRODUCTO as p2
+JOIN FABRICANTE as f2 ON p2.codigo_fabr = f2.codigo
+WHERE f2.nombre = 'Lenovo');
